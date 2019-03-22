@@ -582,6 +582,12 @@ public class Configuration {
     return newExecutor(transaction, defaultExecutorType);
   }
 
+  /**
+   * 创建执行器
+   * @param transaction
+   * @param executorType
+   * @return
+   */
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
     executorType = executorType == null ? defaultExecutorType : executorType;
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
@@ -591,11 +597,15 @@ public class Configuration {
     } else if (ExecutorType.REUSE == executorType) {
       executor = new ReuseExecutor(this, transaction);
     } else {
+      // 创建简单类型的执行器
       executor = new SimpleExecutor(this, transaction);
     }
+    // 如果开启了二级缓存，则使用代理模式，创建CachingExecutor
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);
     }
+
+    // 将执行器executor设置到plugins节点设置的所有插件中，作为插件的目标执行器
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;
   }

@@ -26,6 +26,8 @@ import org.xml.sax.SAXException;
 
 /**
  * Offline entity resolver for the MyBatis DTDs.
+ * XMLMapperEntityResolver是XML文件的验证器,主要为了验证XML的dtd规范,
+ * 主要是为了防止网络问题(根据systemId下载不到文件)，使用jar包的文件进行离线解析
  *
  * @author Clinton Begin
  * @author Eduardo Macarron

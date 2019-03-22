@@ -184,19 +184,26 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final List<Object> multipleResults = new ArrayList<>();
 
     int resultSetCount = 0;
+    // 1 从JDBC操作数据库后的statement中取出结果集ResultSet
     ResultSetWrapper rsw = getFirstResultSet(stmt);
 
+    // 2、获取的resultMaps，resultMap定义了jdbc列到Java属性的映射关系，可以解决列名和java属性名不一致，关联数据库映射等诸多问题
     List<ResultMap> resultMaps = mappedStatement.getResultMaps();
     int resultMapCount = resultMaps.size();
     validateResultMapsCount(rsw, resultMapCount);
+    //3 一条条处理resultSet
     while (rsw != null && resultMapCount > resultSetCount) {
+      // 取出一条resultMap，即映射结果
       ResultMap resultMap = resultMaps.get(resultSetCount);
+      // 进行数据库列到java属性的映射
       handleResultSet(rsw, resultMap, multipleResults, null);
+      // 取出下一条resultSet
       rsw = getNextResultSet(stmt);
       cleanUpAfterHandlingResultSet();
       resultSetCount++;
     }
 
+    // 处理嵌套的resultMap，即映射结果中的某些子属性也需要resultMap映射
     String[] resultSets = mappedStatement.getResultSets();
     if (resultSets != null) {
       while (rsw != null && resultSetCount < resultSets.length) {
@@ -211,7 +218,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         resultSetCount++;
       }
     }
-
+    // 5 构造list，将处理结果返回
     return collapseSingleResultList(multipleResults);
   }
 
@@ -291,16 +298,27 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
   }
 
+  /**
+   * handleResultSet()方法是数据库类到java属性映射的关键，也是ORM的关键所在
+   * @param rsw
+   * @param resultMap
+   * @param multipleResults
+   * @param parentMapping
+   * @throws SQLException
+   */
   private void handleResultSet(ResultSetWrapper rsw, ResultMap resultMap, List<Object> multipleResults, ResultMapping parentMapping) throws SQLException {
     try {
       if (parentMapping != null) {
+        // 如果parentMapping不为空，表示处理的是嵌套resultMap中的子resultMap
         handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);
       } else {
         if (resultHandler == null) {
+          //如果用户没有自定义resultHandler时，采用DefaultResultHandler
           DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);
           handleRowValues(rsw, resultMap, defaultResultHandler, rowBounds, null);
           multipleResults.add(defaultResultHandler.getResultList());
         } else {
+          // 用户定义了resultHandler时，采用用户定义的resultHandler
           handleRowValues(rsw, resultMap, resultHandler, rowBounds, null);
         }
       }
@@ -321,10 +339,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   public void handleRowValues(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
     if (resultMap.hasNestedResultMaps()) {
+      // 如果有嵌套
       ensureNoRowBounds();
       checkResultHandler();
       handleRowValuesForNestedResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);
     } else {
+      //如果无嵌套
       handleRowValuesForSimpleResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);
     }
   }
@@ -348,18 +368,24 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       throws SQLException {
     DefaultResultContext<Object> resultContext = new DefaultResultContext<>();
     ResultSet resultSet = rsw.getResultSet();
+    // mybatis的逻辑分页规则为跳过rowBounds中offset之前的部分，取limit行数的数据
     skipRows(resultSet, rowBounds);
     while (shouldProcessMoreRows(resultContext, rowBounds) && !resultSet.isClosed() && resultSet.next()) {
+      //处理resultMap中的discriminator，使用结果值来决定使用哪个结果映射。可以将不同的数据库结果映射成不同的java类型
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(resultSet, resultMap, null);
+      // 处理这一行数据，得到映射后的java结果
       Object rowValue = getRowValue(rsw, discriminatedResultMap, null);
+      // 使用resultHandler处理得到的java结果，这才是最终返回的java属性值
       storeObject(resultHandler, resultContext, rowValue, parentMapping, resultSet);
     }
   }
 
   private void storeObject(ResultHandler<?> resultHandler, DefaultResultContext<Object> resultContext, Object rowValue, ResultMapping parentMapping, ResultSet rs) throws SQLException {
     if (parentMapping != null) {
+      // 嵌套的resultMap，也就是子resultSet结果。链接到父resultSet中，由父resultMap一起处理
       linkToParents(rs, parentMapping, rowValue);
     } else {
+      // 不是嵌套时，直接调用resultHandler进行最后的处理
       callResultHandler(resultHandler, resultContext, rowValue);
     }
   }
@@ -367,6 +393,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   @SuppressWarnings("unchecked" /* because ResultHandler<?> is always ResultHandler<Object>*/)
   private void callResultHandler(ResultHandler<?> resultHandler, DefaultResultContext<Object> resultContext, Object rowValue) {
     resultContext.nextResultObject(rowValue);
+    // 构建resultContext上下文，然后利用resultHandler处理。后面以DefaultResultHandler来分析
     ((ResultHandler<Object>) resultHandler).handleResult(resultContext);
   }
 

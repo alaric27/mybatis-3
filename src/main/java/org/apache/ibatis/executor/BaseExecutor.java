@@ -143,29 +143,36 @@ public abstract class BaseExecutor implements Executor {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
+    // flush cache, 即写入并清空cache。之后就只能从数据库中读取了，这样可以防止脏cache
+    // localCache和localOutputParameterCache为BaseExecutor的成员变量，它们构成了mybatis的一级缓存，也就是sqlSession级别的缓存，默认是开启的。
     if (queryStack == 0 && ms.isFlushCacheRequired()) {
       clearLocalCache();
     }
     List<E> list;
     try {
       queryStack++;
+      // 先从缓存中获取
       list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
       if (list != null) {
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
+        // 如果缓存未命中，从数据库中查询
         list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
       }
     } finally {
       queryStack--;
     }
+    // 当前所有查询语句都结束时，开始处理延迟加载。从缓存中取出执行结果，因为前面已经有过本查询语句了
     if (queryStack == 0) {
       for (DeferredLoad deferredLoad : deferredLoads) {
+        // 延迟加载从缓存中获取结果
         deferredLoad.load();
       }
       // issue #601
       deferredLoads.clear();
       if (configuration.getLocalCacheScope() == LocalCacheScope.STATEMENT) {
         // issue #482
+        // statement级别的缓存，只缓存id相同的sql。当所有查询语句和延迟加载的查询语句均执行完毕后，可清空cache。这样可节约内存
         clearLocalCache();
       }
     }
@@ -317,6 +324,18 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
+  /**
+   * 从数据库中查询结果
+   * @param ms
+   * @param parameter
+   * @param rowBounds
+   * @param resultHandler
+   * @param key
+   * @param boundSql
+   * @param <E>
+   * @return
+   * @throws SQLException
+   */
   private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     List<E> list;
     localCache.putObject(key, EXECUTION_PLACEHOLDER);

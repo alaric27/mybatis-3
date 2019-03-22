@@ -26,6 +26,11 @@ public class InterceptorChain {
 
   private final List<Interceptor> interceptors = new ArrayList<>();
 
+  /**
+   *  遍历所有插件，将传入的target，作为插件的目标执行器。插件通过配置XML文件的plugins节点设置。
+   * @param target
+   * @return
+   */
   public Object pluginAll(Object target) {
     for (Interceptor interceptor : interceptors) {
       target = interceptor.plugin(target);

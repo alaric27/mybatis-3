@@ -122,7 +122,9 @@ public class XPathParser {
   }
 
   public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {
+    // 设置 entityResolver、variables等属性
     commonConstructor(validation, variables, entityResolver);
+    // 创建Document文档
     this.document = createDocument(new InputSource(inputStream));
   }
 
@@ -226,9 +228,16 @@ public class XPathParser {
     }
   }
 
+  /**
+   * 这里使用的是java的DOM方式解析
+   * @param inputSource
+   * @return
+   */
   private Document createDocument(InputSource inputSource) {
     // important: this must only be called AFTER common constructor
     try {
+      // 以下方法为DOM解析的标准流程
+      // 构建文档建造者工厂,并设置相关属性
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setValidating(validation);
 
@@ -238,6 +247,7 @@ public class XPathParser {
       factory.setCoalescing(false);
       factory.setExpandEntityReferences(true);
 
+      // 实例化文档建造者
       DocumentBuilder builder = factory.newDocumentBuilder();
       builder.setEntityResolver(entityResolver);
       builder.setErrorHandler(new ErrorHandler() {
@@ -255,6 +265,7 @@ public class XPathParser {
         public void warning(SAXParseException exception) throws SAXException {
         }
       });
+      // 解析InputSource 为Document对象
       return builder.parse(inputSource);
     } catch (Exception e) {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);

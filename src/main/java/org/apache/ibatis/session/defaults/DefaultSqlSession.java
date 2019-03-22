@@ -54,6 +54,13 @@ public class DefaultSqlSession implements SqlSession {
   private boolean dirty;
   private List<Cursor<?>> cursorList;
 
+  /**
+   * 设置并初始化相关对象，其中executor成员最为关键，DefaultSQLSession的大部分方法均是通过它来代理实现，
+   * 比如select update方法。而delete和insert方法均调用update方法实现
+   * @param configuration
+   * @param executor
+   * @param autoCommit
+   */
   public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
     this.configuration = configuration;
     this.executor = executor;
@@ -70,9 +77,18 @@ public class DefaultSqlSession implements SqlSession {
     return this.selectOne(statement, null);
   }
 
+  /**
+   * selectOne实际上也是调用的selectList方法
+   * @param statement Unique identifier matching the statement to use.
+   * @param parameter A parameter object to pass to the statement.
+   * @param <T>
+   * @return
+   */
   @Override
   public <T> T selectOne(String statement, Object parameter) {
     // Popular vote was to return null on 0 results and throw exception on too many.
+    // 从注释可以看出，这里的处理是经过投票决定的。
+    // 如果返回的是多个对象，则抛出异常，如果是一个则正常返回，否则返回null
     List<T> list = this.selectList(statement, parameter);
     if (list.size() == 1) {
       return list.get(0);
@@ -140,10 +156,23 @@ public class DefaultSqlSession implements SqlSession {
     return this.selectList(statement, parameter, RowBounds.DEFAULT);
   }
 
+  /**
+   * rowBounds:逻辑分页，包含offset和limit两个主要成员变量。
+   * mybatis分页逻辑为舍弃offset之前条目，取剩下的limit条。默认DEFAULT不分页
+   *
+   * @param statement Unique identifier matching the statement to use.
+   * @param parameter A parameter object to pass to the statement.
+   * @param rowBounds  Bounds to limit object retrieval
+   * @param <E>
+   * @return
+   */
   @Override
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
     try {
+        // 根据sql的Id,获取到MappedStatement对象
       MappedStatement ms = configuration.getMappedStatement(statement);
+
+      // 调用执行器执行查询
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
@@ -316,7 +345,13 @@ public class DefaultSqlSession implements SqlSession {
     return (!autoCommit && dirty) || force;
   }
 
+  /**
+   * 包装集合查询参数
+   * @param object
+   * @return
+   */
   private Object wrapCollection(final Object object) {
+    // 如果参数是集合类型，则把参数包装为StrictMap对象返回，key 为collection 或者 list
     if (object instanceof Collection) {
       StrictMap<Object> map = new StrictMap<>();
       map.put("collection", object);
@@ -325,6 +360,7 @@ public class DefaultSqlSession implements SqlSession {
       }
       return map;
     } else if (object != null && object.getClass().isArray()) {
+      // 如果是数组类型，则把参数包装为StrictMap对象返回，key为array
       StrictMap<Object> map = new StrictMap<>();
       map.put("array", object);
       return map;

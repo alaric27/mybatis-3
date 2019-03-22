@@ -42,6 +42,10 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     this.configuration = configuration;
   }
 
+  /**
+   * 创建Session
+   * @return
+   */
   @Override
   public SqlSession openSession() {
     return openSessionFromDataSource(configuration.getDefaultExecutorType(), null, false);
@@ -87,13 +91,33 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     return configuration;
   }
 
+  /**
+   * 从数据源中开启一个session
+   * @param execType
+   * @param level
+   * @param autoCommit
+   * @return
+   */
   private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
     Transaction tx = null;
     try {
+      // 获取configuration的environment，它代表了运行的数据库环境
       final Environment environment = configuration.getEnvironment();
+      // environment实例中取出tansactionFactory成员变量，然后实例化它
+      // JdbcTransactionFactory创建JdbcTransaction，使用JDBC代理管理commit事务
+      // ManagedTransactionFactory 创建ManagedTransaction，自身不对事务进行处理，完全交给容器，如Spring
+
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
+      // 创建事务对象，dataSource:数据源，level: 事务隔离级别, autoCommit: 是否自动提交
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
+
+      // 由事务transaction创建调度器Executor，SqlSession的几乎所有方法都是通过代理模式由Executor真正实现
+      // Executor代表调度器，由他来调度StatementHandler ParameterHandler ResultSetHandler。四者合称SqlSession四大组件
+      // ExecutorType在XML配置文件的settings节点中设置(defaultExecutorType), 可以取SIMPLE REUSE BATCH，默认为SIMPLE
+      // SIMPLE表示简易执行器，REUSE为一种执行器重用预处理语句，BATCH则为批量专用的执行器。
       final Executor executor = configuration.newExecutor(tx, execType);
+
+      // 构造SqlSession实例，mybatis默认的实现类为DefaultSqlSession
       return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {
       closeTransaction(tx); // may have fetched a connection so lets call close()

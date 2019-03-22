@@ -76,10 +76,24 @@ public class CachingExecutor implements Executor {
     return delegate.update(ms, parameterObject);
   }
 
+  /**
+   * 调用缓存执行器的查询方法
+   * @param ms
+   * @param parameterObject
+   * @param rowBounds
+   * @param resultHandler
+   * @param <E>
+   * @return
+   * @throws SQLException
+   */
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+    // 从MappedStatement中找到boundSql成员变量
     BoundSql boundSql = ms.getBoundSql(parameterObject);
+
+    // 创建缓存的Key
     CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
+    // 执行查询
     return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
@@ -94,13 +108,19 @@ public class CachingExecutor implements Executor {
       throws SQLException {
     Cache cache = ms.getCache();
     if (cache != null) {
+      // 如果flushCache设置为true。则清理缓存
       flushCacheIfRequired(ms);
+
+      // useCache 如果设成true，语句调用的结果会缓存在二级缓存里
       if (ms.isUseCache() && resultHandler == null) {
         ensureNoOutParams(ms, boundSql);
         @SuppressWarnings("unchecked")
+        // 先从缓存中获取
         List<E> list = (List<E>) tcm.getObject(cache, key);
         if (list == null) {
+            // 如果缓存为空则调用被代理类查询
           list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+          // 查询结果写入缓存
           tcm.putObject(cache, key, list); // issue #578 and #116
         }
         return list;

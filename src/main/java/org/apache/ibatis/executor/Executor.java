@@ -28,6 +28,19 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
+ *  Executor是SqlSession的核心，其select update commit rollback close等方法均由Executor代理实现。
+ *  Executor代表调度器，由他来调度StatementHandler ParameterHandler ResultSetHandler。
+ *  四者合称mybatis运行时四大组件。四大组件均可由用户通过插件注入，也都有默认实现。
+ *  执行器的类型有三种：
+ *    SIMPLE:普通的执行器;
+ *    REUSE:执行器会重用预处理语句（prepared statements）;
+ *    BATCH:执行器将重用语句并执行批量更新。
+ *
+ *    如果有缓存是开启的则使用装饰器模式返回一个包装好的缓存执行器
+ *          <settings>
+ *             <setting name="cacheEnabled" value="true"/>
+ *          </settings>
+ *    cacheEnabled 是可配置的，默认值为true
  * @author Clinton Begin
  */
 public interface Executor {

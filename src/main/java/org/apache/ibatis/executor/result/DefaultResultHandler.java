@@ -40,6 +40,7 @@ public class DefaultResultHandler implements ResultHandler<Object> {
 
   @Override
   public void handleResult(ResultContext<?> context) {
+    // DefaultResultHandler对经过resultMap映射后的Java结果不做任何处理，仅仅添加到list中，最后将list返回给selectList()等方法
     list.add(context.getResultObject());
   }
 
