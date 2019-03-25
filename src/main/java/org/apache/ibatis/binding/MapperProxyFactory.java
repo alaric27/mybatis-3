@@ -48,6 +48,7 @@ public class MapperProxyFactory<T> {
   }
 
   public T newInstance(SqlSession sqlSession) {
+    // 所有Mapper的处理器
     final MapperProxy<T> mapperProxy = new MapperProxy<>(sqlSession, mapperInterface, methodCache);
     return newInstance(mapperProxy);
   }

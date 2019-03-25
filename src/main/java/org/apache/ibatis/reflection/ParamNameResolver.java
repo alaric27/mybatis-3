@@ -50,7 +50,9 @@ public class ParamNameResolver {
   private boolean hasParamAnnotation;
 
   public ParamNameResolver(Configuration config, Method method) {
+    // 获取参数的类型
     final Class<?>[] paramTypes = method.getParameterTypes();
+    // 获取参数注解
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
     final SortedMap<Integer, String> map = new TreeMap<>();
     int paramCount = paramAnnotations.length;
@@ -61,6 +63,7 @@ public class ParamNameResolver {
         continue;
       }
       String name = null;
+      // 获取参数索引对应的注解名称
       for (Annotation annotation : paramAnnotations[paramIndex]) {
         if (annotation instanceof Param) {
           hasParamAnnotation = true;
@@ -70,9 +73,11 @@ public class ParamNameResolver {
       }
       if (name == null) {
         // @Param was not specified.
+        //如果 @Param 没有设置，则获取方法参数的原始名称，arg1，arg2等
         if (config.isUseActualParamName()) {
           name = getActualParamName(method, paramIndex);
         }
+        // 如果此时名称还是为空则使用map的大小为名称，如"0", "1", ...
         if (name == null) {
           // use the parameter index as the name ("0", "1", ...)
           // gcode issue #71
@@ -107,21 +112,29 @@ public class ParamNameResolver {
    * ...).
    * </p>
    */
+  /**
+   * 获取命名参数
+   * @param args
+   * @return
+   */
   public Object getNamedParams(Object[] args) {
     final int paramCount = names.size();
     if (args == null || paramCount == 0) {
       return null;
     } else if (!hasParamAnnotation && paramCount == 1) {
+      // 如果没有参数注解，并且参数数量为1.则返回第一个参数
       return args[names.firstKey()];
     } else {
       final Map<String, Object> param = new ParamMap<>();
       int i = 0;
       for (Map.Entry<Integer, String> entry : names.entrySet()) {
+        // 把键值对存储param中，如name:alaric
         param.put(entry.getValue(), args[entry.getKey()]);
         // add generic param names (param1, param2, ...)
         final String genericParamName = GENERIC_NAME_PREFIX + String.valueOf(i + 1);
         // ensure not to overwrite parameter named with @Param
         if (!names.containsValue(genericParamName)) {
+          // 添加通用名称 (param1, param2, ...)
           param.put(genericParamName, args[entry.getKey()]);
         }
         i++;

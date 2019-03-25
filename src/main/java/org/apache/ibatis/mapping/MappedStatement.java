@@ -29,6 +29,8 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * MappedStatement类在Mybatis框架中用于表示XML文件中一个sql语句节点，即一个<select />、<update />或者<insert />标签。
+ * Mybatis框架在初始化阶段会对XML配置文件进行读取，将其中的sql语句节点对象化为一个个MappedStatement对象。
  * @author Clinton Begin
  */
 public final class MappedStatement {

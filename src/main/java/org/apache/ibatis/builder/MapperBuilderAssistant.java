@@ -137,6 +137,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .properties(props)
         .build();
     configuration.addCache(cache);
+    // mapper配置文件中的cache节点被解析到了XMLMapperBuilder实例中的builderAssistant属性中的currentCache值里。
     currentCache = cache;
     return cache;
   }

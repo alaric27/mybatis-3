@@ -83,6 +83,7 @@ public class MapperMethod {
         } else if (method.returnsCursor()) {
           result = executeForCursor(sqlSession, args);
         } else {
+          // 转换Mappper的参数
           Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
           if (method.returnsOptional()
@@ -302,6 +303,9 @@ public class MapperMethod {
       this.returnsMap = this.mapKey != null;
       this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
       this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
+      /**
+       * 创建参数名称解析器
+       */
       this.paramNameResolver = new ParamNameResolver(configuration, method);
     }
 

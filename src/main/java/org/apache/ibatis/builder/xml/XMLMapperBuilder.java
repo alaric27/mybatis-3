@@ -91,8 +91,11 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   public void parse() {
     if (!configuration.isResourceLoaded(resource)) {
+      // 解析mapper文件
       configurationElement(parser.evalNode("/mapper"));
+      // 添加解析过的资源
       configuration.addLoadedResource(resource);
+      // 添加namespace对应的Mapper接口 到 mapperRegistry
       bindMapperForNamespace();
     }
 
@@ -112,7 +115,13 @@ public class XMLMapperBuilder extends BaseBuilder {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
+
+      // 解析<cache-ref/>
+      // 如果每个mapper文件都是用cache-ref，且namespace都一样，那么就代表着真正意义上的全局缓存。
+      // 如果只用了cache节点，那仅代表这个这个mapper内部的查询被缓存了，其他mapper文件的不起作用，这并不是所谓的全局缓存。
       cacheRefElement(context.evalNode("cache-ref"));
+
+      // 解析<cache/>标签
       cacheElement(context.evalNode("cache"));
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
       resultMapElements(context.evalNodes("/mapper/resultMap"));
@@ -198,6 +207,10 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
+  /**
+   * 解析<cache/>标签
+   * @param context
+   */
   private void cacheElement(XNode context) {
     if (context != null) {
       String type = context.getStringAttribute("type", "PERPETUAL");
@@ -209,6 +222,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       boolean readWrite = !context.getBooleanAttribute("readOnly", false);
       boolean blocking = context.getBooleanAttribute("blocking", false);
       Properties props = context.getChildrenAsProperties();
+      // 调用useNewCache创建新的Cache，这里可以看出每个Mapper.xml文件对应一个cache
       builderAssistant.useNewCache(typeClass, evictionClass, flushInterval, size, readWrite, blocking, props);
     }
   }

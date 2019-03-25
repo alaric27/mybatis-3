@@ -60,6 +60,7 @@ public class SimpleExecutor extends BaseExecutor {
     try {
       Configuration configuration = ms.getConfiguration();
       // 创建StatementHandler
+      //这里会创建默认的StatementHandler的时候会创建默认的参数处理器 DefaultParameterHandler
       StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
       stmt = prepareStatement(handler, ms.getStatementLog());
       //调用查询方法
@@ -87,6 +88,7 @@ public class SimpleExecutor extends BaseExecutor {
     Statement stmt;
     Connection connection = getConnection(statementLog);
     stmt = handler.prepare(connection, transaction.getTimeout());
+    //这里便是设置参数的的地方，调用默认的参数处理器
     handler.parameterize(stmt);
     return stmt;
   }

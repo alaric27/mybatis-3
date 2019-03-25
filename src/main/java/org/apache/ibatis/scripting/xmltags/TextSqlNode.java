@@ -72,6 +72,7 @@ public class TextSqlNode implements SqlNode {
       if (parameter == null) {
         context.getBindings().put("value", null);
       } else if (SimpleTypeRegistry.isSimpleType(parameter.getClass())) {
+        // 判断如果是基本数据类型，就把value当做key放到context的上下文中
         context.getBindings().put("value", parameter);
       }
       Object value = OgnlCache.getValue(content, context.getBindings());

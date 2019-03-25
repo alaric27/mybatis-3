@@ -76,8 +76,10 @@ public class DefaultParameterHandler implements ParameterHandler {
             value = parameterObject;
           } else {
             MetaObject metaObject = configuration.newMetaObject(parameterObject);
+            //从参数中获取key对应的值
             value = metaObject.getValue(propertyName);
           }
+          //根据不同的类型处理器，处理不同的数据类型
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
           JdbcType jdbcType = parameterMapping.getJdbcType();
           if (value == null && jdbcType == null) {
