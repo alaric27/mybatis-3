@@ -18,6 +18,7 @@ package org.apache.ibatis.reflection.invoker;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * Set Get Method等方法调用的封装
  * @author Clinton Begin
  */
 public interface Invoker {

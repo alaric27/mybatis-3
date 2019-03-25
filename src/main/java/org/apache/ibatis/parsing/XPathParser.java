@@ -40,6 +40,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
+ * mybatis XML 文档解析器
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -272,6 +273,12 @@ public class XPathParser {
     }
   }
 
+  /**
+   * 初始化validation、entityResolver、variables、xpath等属性
+   * @param validation
+   * @param variables
+   * @param entityResolver
+   */
   private void commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver) {
     this.validation = validation;
     this.entityResolver = entityResolver;

@@ -31,16 +31,21 @@ import java.util.Arrays;
 public class TypeParameterResolver {
 
   /**
+   * 解析宇段类
    * @return The field type as {@link Type}. If it has type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
   public static Type resolveFieldType(Field field, Type srcType) {
+    //获取字段的声明类型
     Type fieldType = field.getGenericType();
+
+    // 获取字段定义所在的类的 Class 对象
     Class<?> declaringClass = field.getDeclaringClass();
     return resolveType(fieldType, srcType, declaringClass);
   }
 
   /**
+   * 解析返回类型
    * @return The return type of the method as {@link Type}. If it has type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
@@ -51,6 +56,7 @@ public class TypeParameterResolver {
   }
 
   /**
+   * 解析方法参数列表中各个参数的类型
    * @return The parameter types of the method as an array of {@link Type}s. If they have type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
@@ -64,14 +70,26 @@ public class TypeParameterResolver {
     return result;
   }
 
+  /**
+   *
+   * @param type 字段、方法返回值或方法参数的类型，根据该字段选择合适的方法进行解析
+   * @param srcType 表示查找该字段、返回值或方法参数的起始位置
+   * @param declaringClass 表示该字段、 方法 定义所在的类。
+   * @return
+   */
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
+
     if (type instanceof TypeVariable) {
+      // 解析 TypeVariable 类型
       return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
     } else if (type instanceof ParameterizedType) {
+      //解析 ParameterizedType 类型
       return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass);
     } else if (type instanceof GenericArrayType) {
+      //解析 GenericArrayType 类型
       return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);
     } else {
+      //Class 类型
       return type;
     }
   }

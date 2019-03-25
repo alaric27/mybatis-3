@@ -27,13 +27,29 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
+ * MetaClass是 MyBatis对类级别的元信息的封装和处理
+ *
+ * MetaClass 通过 Reflector 和 PropertyTokenizer 组合使用，
+ * 实现了对复杂的属性表达式的解 析，并实现了获取指定属性描述信息的功能。
  * @author Clinton Begin
  */
 public class MetaClass {
 
+  /**
+   * ReflectorFactory 对象，用于创建和缓存 Reflector 对象
+   */
   private final ReflectorFactory reflectorFactory;
+
+  /**
+   * 在创建 MetaClass 时会指定一个类，该 Reflector 对象会用于记录该类相关 的元信息
+   */
   private final Reflector reflector;
 
+  /**
+   * 初始化MetaClass
+   * @param type
+   * @param reflectorFactory
+   */
   private MetaClass(Class<?> type, ReflectorFactory reflectorFactory) {
     this.reflectorFactory = reflectorFactory;
     this.reflector = reflectorFactory.findForClass(type);
@@ -93,10 +109,18 @@ public class MetaClass {
     return MetaClass.forClass(propType, reflectorFactory);
   }
 
+  /**
+   * 获取表达式所表示的属性的类型
+   * @param prop
+   * @return
+   */
   private Class<?> getGetterType(PropertyTokenizer prop) {
     Class<?> type = reflector.getGetterType(prop.getName());
+    //该表达式中是否使用”[]”指定了下标， 且是Collection子类
     if (prop.getIndex() != null && Collection.class.isAssignableFrom(type)) {
+      //通过 TypeParameterResolver 工具类解析属性的类 型
       Type returnType = getGenericGetterType(prop.getName());
+      //针对 ParameterizedType 进行处理 ， l!p针对泛型集合类型进行处理
       if (returnType instanceof ParameterizedType) {
         Type[] actualTypeArguments = ((ParameterizedType) returnType).getActualTypeArguments();
         if (actualTypeArguments != null && actualTypeArguments.length == 1) {
@@ -146,8 +170,11 @@ public class MetaClass {
   }
 
   public boolean hasGetter(String name) {
+    // 解析属性表达式
     PropertyTokenizer prop = new PropertyTokenizer(name);
+    // 存在待处理的子表达式
     if (prop.hasNext()) {
+      // PropertyTokenizer.name 指定的属性有 getter 方法，才能处理子表达式
       if (reflector.hasGetter(prop.getName())) {
         MetaClass metaProp = metaClassForProperty(prop);
         return metaProp.hasGetter(prop.getChildren());
@@ -167,14 +194,26 @@ public class MetaClass {
     return reflector.getSetInvoker(name);
   }
 
+  /**
+   *  buildProperty()方法只查找“.”导航的属性，并没有检测下标。例如: a.b.c
+   * @param name
+   * @param builder
+   * @return
+   */
   private StringBuilder buildProperty(String name, StringBuilder builder) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
+
+    //是否还有子表达式
     if (prop.hasNext()) {
+      // 查找 PropertyTokenizer.name 对应的属性
       String propertyName = reflector.findPropertyName(prop.getName());
       if (propertyName != null) {
+        // 追加属性名
         builder.append(propertyName);
         builder.append(".");
+        // 为该属性创建对应的 MetaClass 对象
         MetaClass metaProp = metaClassForProperty(propertyName);
+        // 递归解析 PropertyTokenizer.children 字段，并将解析结果添加到 builder 中保存
         metaProp.buildProperty(prop.getChildren(), builder);
       }
     } else {

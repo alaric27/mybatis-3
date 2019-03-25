@@ -22,6 +22,7 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
+ * mybatis对 对象级别的元信息的处理
  * @author Clinton Begin
  */
 public interface ObjectWrapper {

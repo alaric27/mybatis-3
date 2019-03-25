@@ -28,6 +28,12 @@ public final class PropertyCopier {
     // Prevent Instantiation of Static Class
   }
 
+  /**
+   * 属性复制
+   * @param type sourceBean 和 destinationBean 的类型，源和目标的类型必须一致
+   * @param sourceBean 源数据
+   * @param destinationBean 目标数据
+   */
   public static void copyBeanProperties(Class<?> type, Object sourceBean, Object destinationBean) {
     Class<?> parent = type;
     while (parent != null) {
