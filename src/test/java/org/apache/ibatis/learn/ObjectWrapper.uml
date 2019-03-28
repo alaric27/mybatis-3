@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.ibatis.reflection.wrapper.ObjectWrapper</OriginalElement>
+  <nodes>
+    <node x="0.0" y="390.0">org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory</node>
+    <node x="24.0" y="158.0">org.apache.ibatis.reflection.wrapper.BeanWrapper</node>
+    <node x="260.75" y="0.0">org.apache.ibatis.reflection.wrapper.ObjectWrapper</node>
+    <node x="22.0" y="311.0">org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory</node>
+    <node x="176.0" y="158.0">org.apache.ibatis.reflection.wrapper.MapWrapper</node>
+    <node x="430.1785714285714" y="79.0">org.apache.ibatis.submitted.custom_collection_handling.CustomObjectWrapper</node>
+    <node x="248.1785714285714" y="79.0">org.apache.ibatis.reflection.wrapper.CollectionWrapper</node>
+    <node x="97.17857142857139" y="79.0">org.apache.ibatis.reflection.wrapper.BaseWrapper</node>
+    <node x="0.0" y="237.0">org.apache.ibatis.domain.misc.CustomBeanWrapper</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.ibatis.submitted.custom_collection_handling.CustomObjectWrapper" target="org.apache.ibatis.reflection.wrapper.ObjectWrapper">
+      <point x="0.0" y="-14.5" />
+      <point x="524.6785714285713" y="54.0" />
+      <point x="378.25" y="54.0" />
+      <point x="47.0" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.reflection.wrapper.BaseWrapper" target="org.apache.ibatis.reflection.wrapper.ObjectWrapper">
+      <point x="0.0" y="-14.5" />
+      <point x="162.6785714285714" y="54.0" />
+      <point x="284.25" y="54.0" />
+      <point x="-47.0" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory" target="org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.reflection.wrapper.BeanWrapper" target="org.apache.ibatis.reflection.wrapper.BaseWrapper">
+      <point x="0.0" y="-14.5" />
+      <point x="90.0" y="133.0" />
+      <point x="129.9285714285714" y="133.0" />
+      <point x="-32.75" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.domain.misc.CustomBeanWrapper" target="org.apache.ibatis.reflection.wrapper.BeanWrapper">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.reflection.wrapper.CollectionWrapper" target="org.apache.ibatis.reflection.wrapper.ObjectWrapper">
+      <point x="0.0" y="-14.5" />
+      <point x="329.1785714285714" y="54.0" />
+      <point x="331.25" y="54.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.reflection.wrapper.MapWrapper" target="org.apache.ibatis.reflection.wrapper.BaseWrapper">
+      <point x="0.0" y="-14.5" />
+      <point x="239.5" y="133.0" />
+      <point x="195.4285714285714" y="133.0" />
+      <point x="32.75" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="70.5" y="14.5" />
+  <SelectedNodes>
+    <node>org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory</node>
+    <node>org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

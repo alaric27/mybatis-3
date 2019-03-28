@@ -54,6 +54,7 @@ import org.apache.ibatis.logging.LogFactory;
  * Collection&lt;ActionBean&gt; beans = resolver.getClasses();
  * </pre>
  *
+ * 可以根据指定的条件查找指定包下的类
  * @author Tim Fennell
  */
 public class ResolverUtil<T> {
@@ -75,6 +76,7 @@ public class ResolverUtil<T> {
   }
 
   /**
+   * 用于检测指定类是否继承了 parent 指定的类
    * A Test that checks to see if each class is assignable to the provided class. Note
    * that this test will match the parent type itself if it is presented for matching.
    */
@@ -99,6 +101,7 @@ public class ResolverUtil<T> {
   }
 
   /**
+   * 检测指定类是否添加 了 annotation i主解
    * A Test that checks to see if each class is annotated with a specific annotation. If it
    * is, then the test returns true, otherwise false.
    */
@@ -217,9 +220,11 @@ public class ResolverUtil<T> {
     String path = getPackagePath(packageName);
 
     try {
+      //通过 VFS.list()查找 packageName 包下 的所有资源
       List<String> children = VFS.getInstance().list(path);
       for (String child : children) {
         if (child.endsWith(".class")) {
+          //检测该类是否符合 test 条件
           addIfMatching(test, child);
         }
       }
@@ -250,6 +255,7 @@ public class ResolverUtil<T> {
   @SuppressWarnings("unchecked")
   protected void addIfMatching(Test test, String fqn) {
     try {
+      // fqn是类的完全限定名，即包括其所在包的包名
       String externalName = fqn.substring(0, fqn.indexOf('.')).replace('/', '.');
       ClassLoader loader = getClassLoader();
       if (log.isDebugEnabled()) {
@@ -257,7 +263,9 @@ public class ResolverUtil<T> {
       }
 
       Class<?> type = loader.loadClass(externalName);
+      // 通过 Test.matches ()方法检测条件是否满足
       if (test.matches(type)) {
+         // 将符合条件的类记录到 matches 集合中
         matches.add((Class<T>) type);
       }
     } catch (Throwable t) {

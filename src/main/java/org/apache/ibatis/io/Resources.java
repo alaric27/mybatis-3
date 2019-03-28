@@ -26,6 +26,7 @@ import java.nio.charset.Charset;
 import java.util.Properties;
 
 /**
+ * ClassLoaderWrapper 的封装，提供了一组静态方法，方便使用
  * A class to simplify access to resources through the classloader.
  *
  * @author Clinton Begin

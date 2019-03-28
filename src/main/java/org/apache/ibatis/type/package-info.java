@@ -17,3 +17,7 @@
  * Type handlers.
  */
 package org.apache.ibatis.type;
+
+/**
+ * Mybatis 类型转换包
+ */

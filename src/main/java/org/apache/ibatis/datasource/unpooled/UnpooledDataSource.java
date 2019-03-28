@@ -37,19 +37,55 @@ import org.apache.ibatis.io.Resources;
  */
 public class UnpooledDataSource implements DataSource {
 
+  /**
+   * 加载 Driver 类的类加载器
+   */
   private ClassLoader driverClassLoader;
+
+  /**
+   * 数据库连接驱动的相关配置
+   */
   private Properties driverProperties;
+
+  /**
+   * 缓存所有 已注册的数据库连接驱动
+   */
   private static Map<String, Driver> registeredDrivers = new ConcurrentHashMap<>();
 
+  /**
+   * 数据库连接的驱动名称
+   */
   private String driver;
+
+  /**
+   * 数据库 URL
+   */
   private String url;
+
+  /**
+   * 用户名
+   */
   private String username;
+
+  /**
+   * 密码
+   */
   private String password;
 
+  /**
+   *  是否自动提交
+   */
   private Boolean autoCommit;
+
+  /**
+   * 事务隔离级别
+   */
   private Integer defaultTransactionIsolationLevel;
 
   static {
+    /**
+     * 在 UnpooledDataSource 加载时会通过该静态代码块将己在 DriverManager中注册的 JDBC Driver复制一份到 UnpooledDataSource.registeredDrivers集合中
+     */
     Enumeration<Driver> drivers = DriverManager.getDrivers();
     while (drivers.hasMoreElements()) {
       Driver driver = drivers.nextElement();
@@ -197,8 +233,11 @@ public class UnpooledDataSource implements DataSource {
   }
 
   private Connection doGetConnection(Properties properties) throws SQLException {
+    // 初始化数据库驱动
     initializeDriver();
+    // 创建真正的数据库连接
     Connection connection = DriverManager.getConnection(url, properties);
+    // 配置数据库连接的 autoCommit 和隔离级别
     configureConnection(connection);
     return connection;
   }

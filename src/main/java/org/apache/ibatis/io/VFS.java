@@ -28,6 +28,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
 /**
+ * VFS表示虚拟文件系统 (VirtualFileSystem)， 它用来查找指定路径下的资源。
  * Provides a very simple API for accessing resources within an application server.
  *
  * @author Ben Gunter

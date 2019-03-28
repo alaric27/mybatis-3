@@ -1,0 +1,31 @@
+@startuml
+
+package  DataSourceFactory{
+    interface DataSourceFactory
+    class JndiDataSourceFactory
+    class UnpooledDataSourceFactory
+    class PooledDataSourceFactory
+
+}
+
+package DataSource {
+    interface DataSource
+    class UnpooledDataSource
+    class PooledDataSource
+}
+
+
+DataSourceFactory <|.. JndiDataSourceFactory
+DataSourceFactory <|.. UnpooledDataSourceFactory
+UnpooledDataSourceFactory <|-- PooledDataSourceFactory
+
+DataSource <|.. PooledDataSource
+DataSource <|.. UnpooledDataSource
+
+UnpooledDataSourceFactory ..> UnpooledDataSource
+PooledDataSourceFactory ..> PooledDataSource
+
+note as N1
+    工厂方法模式
+end note
+@enduml

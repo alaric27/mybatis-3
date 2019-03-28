@@ -19,17 +19,26 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
+ * 类加载器的包装类，包装了多个类加载器
  * A class to wrap access to multiple class loaders making them work as one
  *
  * @author Clinton Begin
  */
 public class ClassLoaderWrapper {
 
+  /**
+   * 应用指定的类加载器
+   */
   ClassLoader defaultClassLoader;
+
+  /**
+   * 系统类加载器 AppClassLoader
+   */
   ClassLoader systemClassLoader;
 
   ClassLoaderWrapper() {
     try {
+      // 获取系统类加载器 AppClassLoader
       systemClassLoader = ClassLoader.getSystemClassLoader();
     } catch (SecurityException ignored) {
       // AccessControlException on Google App Engine
@@ -143,11 +152,12 @@ public class ClassLoaderWrapper {
 
       if (null != cl) {
 
-        // look for the resource as passed in...
+        // 调用 ClassLoader.getResource ()方法查找指定的资源
         url = cl.getResource(resource);
 
         // ...but some class loaders want this leading "/", so we'll add it
         // and try again if we didn't find the resource
+        // 尝试以 ”/”开头，再次查找
         if (null == url) {
           url = cl.getResource("/" + resource);
         }
@@ -201,13 +211,18 @@ public class ClassLoaderWrapper {
 
   }
 
+  /**
+   * 返回一个数组，该数组表明累加器的顺序
+   * @param classLoader
+   * @return
+   */
   ClassLoader[] getClassLoaders(ClassLoader classLoader) {
     return new ClassLoader[]{
-        classLoader,
-        defaultClassLoader,
-        Thread.currentThread().getContextClassLoader(),
-        getClass().getClassLoader(),
-        systemClassLoader};
+        classLoader, // 参数指定的类加载器
+        defaultClassLoader, // 应用指定的默认类加载器
+        Thread.currentThread().getContextClassLoader(), // 当前线程绑定的类加载器
+        getClass().getClassLoader(),// 加载当前类所使用的类加载器
+        systemClassLoader}; // System Cl assLoader
   }
 
 }

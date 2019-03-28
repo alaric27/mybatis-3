@@ -17,3 +17,10 @@
  * Reflection utils.
  */
 package org.apache.ibatis.reflection;
+
+/**
+ *
+ * Mybatis封装的反射包
+ *
+ *
+ */
