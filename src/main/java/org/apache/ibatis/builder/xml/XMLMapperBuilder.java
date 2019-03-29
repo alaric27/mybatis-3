@@ -49,6 +49,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * 负责解析Mapper文件
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -99,8 +100,13 @@ public class XMLMapperBuilder extends BaseBuilder {
       bindMapperForNamespace();
     }
 
+    // 处理 configurationElement ()方法中解析失败的<resultMap>节点
     parsePendingResultMaps();
+
+    //处理 configurationElement ()方法中 解析失败的< cache-ref>节点
     parsePendingCacheRefs();
+
+    // 处理 configurationElement ()方法中 解析失败的 SQL 语句节点
     parsePendingStatements();
   }
 
@@ -123,9 +129,17 @@ public class XMLMapperBuilder extends BaseBuilder {
 
       // 解析<cache/>标签
       cacheElement(context.evalNode("cache"));
+
+      // 解析<parameterMap>节点(该节点 已废弃)
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
+
+      // 解析< resultMap>节点
       resultMapElements(context.evalNodes("/mapper/resultMap"));
+
+      // 解析< sql>节点
       sqlElement(context.evalNodes("/mapper/sql"));
+
+      // 解析<select>、<insert>、<update>、<delete>等 SQL 节点
       buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. The XML location is '" + resource + "'. Cause: " + e, e);

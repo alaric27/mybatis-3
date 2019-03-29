@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.ibatis.builder.BaseBuilder</OriginalElement>
+  <nodes>
+    <node x="1211.0" y="89.0">org.apache.ibatis.builder.xml.XMLMapperBuilder</node>
+    <node x="374.0" y="89.0">org.apache.ibatis.builder.MapperBuilderAssistant</node>
+    <node x="1037.0" y="89.0">org.apache.ibatis.scripting.xmltags.XMLScriptBuilder</node>
+    <node x="589.0" y="89.0">org.apache.ibatis.builder.xml.XMLConfigBuilder</node>
+    <node x="608.0" y="0.0">org.apache.ibatis.builder.BaseBuilder</node>
+    <node x="768.0" y="89.0">org.apache.ibatis.submitted.language.VelocitySqlSourceBuilder.ParameterMappingTokenHandler</node>
+    <node x="201.0" y="89.0">org.apache.ibatis.builder.SqlSourceBuilder</node>
+    <node x="0.0" y="89.0">org.apache.ibatis.builder.xml.XMLStatementBuilder</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.ibatis.builder.xml.XMLMapperBuilder" target="org.apache.ibatis.builder.BaseBuilder">
+      <point x="0.0" y="-14.5" />
+      <point x="1293.0" y="49.0" />
+      <point x="720.3571428571429" y="49.0" />
+      <point x="51.85714285714289" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.builder.SqlSourceBuilder" target="org.apache.ibatis.builder.BaseBuilder">
+      <point x="0.0" y="-14.5" />
+      <point x="277.5" y="59.0" />
+      <point x="633.9285714285714" y="59.0" />
+      <point x="-34.571428571428555" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.submitted.language.VelocitySqlSourceBuilder.ParameterMappingTokenHandler" target="org.apache.ibatis.builder.BaseBuilder">
+      <point x="0.0" y="-14.5" />
+      <point x="892.5" y="69.0" />
+      <point x="685.7857142857143" y="69.0" />
+      <point x="17.285714285714334" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.builder.MapperBuilderAssistant" target="org.apache.ibatis.builder.BaseBuilder">
+      <point x="0.0" y="-14.5" />
+      <point x="471.5" y="69.0" />
+      <point x="651.2142857142858" y="69.0" />
+      <point x="-17.28571428571422" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.scripting.xmltags.XMLScriptBuilder" target="org.apache.ibatis.builder.BaseBuilder">
+      <point x="0.0" y="-14.5" />
+      <point x="1114.0" y="59.0" />
+      <point x="703.0714285714286" y="59.0" />
+      <point x="34.571428571428555" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.builder.xml.XMLStatementBuilder" target="org.apache.ibatis.builder.BaseBuilder">
+      <point x="0.0" y="-14.5" />
+      <point x="90.5" y="49.0" />
+      <point x="616.6428571428571" y="49.0" />
+      <point x="-51.85714285714289" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.builder.xml.XMLConfigBuilder" target="org.apache.ibatis.builder.BaseBuilder">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="620.0" y="54.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

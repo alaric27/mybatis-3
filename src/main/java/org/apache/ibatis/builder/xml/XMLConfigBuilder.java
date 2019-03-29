@@ -47,14 +47,30 @@ import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 
 /**
+ *  主键负责解析mybatis-config.xml配置文件
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
 public class XMLConfigBuilder extends BaseBuilder {
 
+  /**
+   * 标识是否已经解析过 mybat工s-config.xml 配置丈件
+   */
   private boolean parsed;
+
+  /**
+   * 用于解析 mybatis-config.xml 配置文件的 XPathParser 对象
+   */
   private final XPathParser parser;
+
+  /**
+   * 标识<environment>配置的名称，默认读取<environment>标签的 default 属性
+   */
   private String environment;
+
+  /**
+   * ReflectorFactory 负责创建和缓存 Reflector 对象
+   */
   private final ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();
 
   public XMLConfigBuilder(Reader reader) {

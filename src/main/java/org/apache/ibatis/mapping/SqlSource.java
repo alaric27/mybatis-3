@@ -16,6 +16,7 @@
 package org.apache.ibatis.mapping;
 
 /**
+ * SqISource接口表示映射文件或注解中定义的 SQL语句
  * Represents the content of a mapped statement read from an XML file or an annotation.
  * It creates the SQL that will be passed to the database out of the input parameter received from the user.
  *
@@ -23,6 +24,11 @@ package org.apache.ibatis.mapping;
  */
 public interface SqlSource {
 
+  /**
+   * 通过解析得到 BoundSql 对象， BoundSql 对象会在后面具体介绍，其中封装了包含”?”占位符的 SQL 语句，以及绑定的实参
+   * @param parameterObject
+   * @return
+   */
   BoundSql getBoundSql(Object parameterObject);
 
 }

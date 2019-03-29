@@ -27,6 +27,8 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * DynamicContext 主要用于 记录解析动态 SQL 语句之后产生的 SQL 语句片段，
+ * 可以认为它 是一个用于记录动态 SQL 语句解析结果的容器
  * @author Clinton Begin
  */
 public class DynamicContext {
@@ -38,6 +40,9 @@ public class DynamicContext {
     OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
   }
 
+  /**
+   * 参数上下文
+   */
   private final ContextMap bindings;
   private final StringJoiner sqlBuilder = new StringJoiner(" ");
   private int uniqueNumber = 0;

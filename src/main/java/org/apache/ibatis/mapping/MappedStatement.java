@@ -35,6 +35,9 @@ import org.apache.ibatis.session.Configuration;
  */
 public final class MappedStatement {
 
+  /**
+   * 节点中的 id属性(包括命名空间前缀)
+   */
   private String resource;
   private Configuration configuration;
   private String id;
@@ -42,6 +45,10 @@ public final class MappedStatement {
   private Integer timeout;
   private StatementType statementType;
   private ResultSetType resultSetType;
+
+  /**
+   * SqlSource 对象，对应一条 SQL 语句
+   */
   private SqlSource sqlSource;
   private Cache cache;
   private ParameterMap parameterMap;
