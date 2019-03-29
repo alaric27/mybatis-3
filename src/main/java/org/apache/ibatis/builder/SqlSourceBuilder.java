@@ -29,6 +29,8 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 
 /**
+ * SqlSourceBuilder 主要完成了两方面的操作， 一方面是解析 SQL 语句中的“#{}” 占位符 中定义的属性
+ * 另一方面是将 SQL 语句中的"#{}"占位符替换成"?" 占位符
  * @author Clinton Begin
  */
 public class SqlSourceBuilder extends BaseBuilder {
@@ -39,10 +41,23 @@ public class SqlSourceBuilder extends BaseBuilder {
     super(configuration);
   }
 
+
+  /**
+   *
+   * @param originalSql  经过 SqlNode.apply ()方法处理之后的 SQL 语句
+   * @param parameterType 用户传入的实参类型
+   * @param additionalParameters 记录了形参与实参的对应关系，其实就是经过 SqlNode.apply ()方法处理后的DynamicContext.bindings 集合。
+   * @return
+   */
   public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
+
+    //创建 ParameterMappingTokenHandler对象，它是解析”#{}”占位符中的参数属性以及替换占位符的核心
     ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
+
+    // 使用 GenericTokenParser 与 ParameterMappingTokenHandler 配合解析 ”#{} ”占位符
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
     String sql = parser.parse(originalSql);
+    //  创建 StaticSqlSource，其中封装了占位符被替换成”?”的 SQL语句以及参数对应的ParameterMapping集合
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
   }
 
@@ -62,6 +77,11 @@ public class SqlSourceBuilder extends BaseBuilder {
       return parameterMappings;
     }
 
+    /**
+     * 添加到参数映射列表，并且返回占位符?
+     * @param content
+     * @return
+     */
     @Override
     public String handleToken(String content) {
       parameterMappings.add(buildParameterMapping(content));

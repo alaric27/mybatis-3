@@ -23,6 +23,7 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * ParameterMapping 中记录了“#{}”占位符中的参数属性
  * @author Clinton Begin
  */
 public class ParameterMapping {
@@ -30,6 +31,10 @@ public class ParameterMapping {
   private Configuration configuration;
 
   private String property;
+
+  /**
+   * 输入参数还是输出参数
+   */
   private ParameterMode mode;
   private Class<?> javaType = Object.class;
   private JdbcType jdbcType;
