@@ -1,0 +1,20 @@
+@startuml
+
+interface Transaction
+interface TransactionFactory
+
+class JdbcTransaction
+class ManagedTransaction
+
+class JdbcTransactionFactory
+class ManagedTransactionFactory
+
+Transaction <|.. JdbcTransaction
+Transaction <|.. ManagedTransaction
+TransactionFactory <|.. JdbcTransactionFactory
+TransactionFactory <|.. ManagedTransactionFactory
+
+JdbcTransaction <.JdbcTransactionFactory
+ManagedTransaction <. ManagedTransactionFactory
+
+@enduml

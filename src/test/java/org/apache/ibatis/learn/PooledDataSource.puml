@@ -1,0 +1,20 @@
+@startuml
+
+title PooledDataSource关系图
+
+interface DataSource
+class UnpooledDataSource
+class PooledDataSource
+class PooledConnection
+class PooledDataSource
+class PoolState
+
+
+DataSource <|.down. UnpooledDataSource
+DataSource <|.down. PooledDataSource
+PooledDataSource *-right-> UnpooledDataSource
+PooledConnection *->PooledDataSource
+PoolState *--* PooledDataSource
+PoolState "1" o--> "n" PooledConnection
+
+@enduml
