@@ -27,13 +27,21 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ * MapperRegistry 是 Mapper 接口及其对应的代理对象工厂的注册中心
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
  */
 public class MapperRegistry {
 
+  /**
+   * Configuration 对象， MyBatis 全局唯一的配置对象，其中包含了所有配置信息
+   */
   private final Configuration config;
+
+  /**
+   * 记录了 Mapper 接口与对应 MapperProxyFactory 之间的关系
+   */
   private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
 
   public MapperRegistry(Configuration config) {

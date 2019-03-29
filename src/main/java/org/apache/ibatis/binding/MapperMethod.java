@@ -39,6 +39,8 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ * Mapper接口中对应方法的信息，以及对应 SQL 语句的信息
+ * 可以将 MapperMethod 看作连接 Mapper 接口以及映射配置文件中定义的 SQL 语句的桥梁
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
@@ -46,7 +48,14 @@ import org.apache.ibatis.session.SqlSession;
  */
 public class MapperMethod {
 
+  /**
+   * 记录了 SQL语句的名称和类型
+   */
   private final SqlCommand command;
+
+  /**
+   * Mapper 接口中对应方法的相关信
+   */
   private final MethodSignature method;
 
   public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
@@ -56,9 +65,13 @@ public class MapperMethod {
 
   public Object execute(SqlSession sqlSession, Object[] args) {
     Object result;
+
+    // 根据 SQL 语句的类型调用 SqlSession 对应的方法
     switch (command.getType()) {
       case INSERT: {
+        // 使用 ParamNameResolver 处理 args []数组(用户传入的实参列表)，将用户传入的 实参与指定参数名称关联起来
         Object param = method.convertArgsToSqlCommandParam(args);
+        // 调用 SqlSession .insert ()方法， rowCountResult ()方法会根据 method 字段中记录的方法的返回值类型对结果进行转换
         result = rowCountResult(sqlSession.insert(command.getName(), param));
         break;
       }
@@ -105,15 +118,24 @@ public class MapperMethod {
     return result;
   }
 
+  /**
+   * INSERT UPDATE DELETE等方法返回的都是int 类型的，需要转换为方法定义的实际类型
+   * @param rowCount
+   * @return
+   */
   private Object rowCountResult(int rowCount) {
     final Object result;
     if (method.returnsVoid()) {
       result = null;
+
     } else if (Integer.class.equals(method.getReturnType()) || Integer.TYPE.equals(method.getReturnType())) {
+      // 如果是Integer则直接返回
       result = rowCount;
     } else if (Long.class.equals(method.getReturnType()) || Long.TYPE.equals(method.getReturnType())) {
+      // 如果是Long类型
       result = (long)rowCount;
     } else if (Boolean.class.equals(method.getReturnType()) || Boolean.TYPE.equals(method.getReturnType())) {
+      // Boolean的处理方式
       result = rowCount > 0;
     } else {
       throw new BindingException("Mapper method '" + command.getName() + "' has an unsupported return type: " + method.getReturnType());
@@ -219,7 +241,14 @@ public class MapperMethod {
 
   public static class SqlCommand {
 
+    /**
+     * 记录SQL的名称
+     */
     private final String name;
+
+    /**
+     * SQL的类型 UNKNOWN、 INSERT、 UPDATE、 DELETE、 SELECT、 FLUSH
+     */
     private final SqlCommandType type;
 
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
@@ -275,15 +304,51 @@ public class MapperMethod {
 
   public static class MethodSignature {
 
+    /**
+     * 返回值类型是否为 Collection 类型或是数组类型
+     */
     private final boolean returnsMany;
+
+    /**
+     * 返回值类型是否为 Map 类型
+     */
     private final boolean returnsMap;
+
+    /**
+     * 返回值类型是否为void
+     */
     private final boolean returnsVoid;
+
+    /**
+     * 返回值是否为 Cursor 类型
+     */
     private final boolean returnsCursor;
+
     private final boolean returnsOptional;
+
+    /**
+     * 返回值类型
+     */
     private final Class<?> returnType;
+
+    /**
+     * 如果返 回值类型是 Map，则该字段记录了作为 key 的列名
+     */
     private final String mapKey;
+
+    /**
+     * 用来标记该方法参数列表中 ResultHandler 类型参数的位置
+     */
     private final Integer resultHandlerIndex;
+
+    /**
+     * 用来标记该方法参数列表中 RowBounds 类型参数的位置
+     */
     private final Integer rowBoundsIndex;
+
+    /**
+     * 该方法对应的 ParamNameResolver对象
+     */
     private final ParamNameResolver paramNameResolver;
 
     public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {
