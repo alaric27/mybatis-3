@@ -3,8 +3,8 @@
   <ID>JAVA</ID>
   <OriginalElement>org.apache.ibatis.scripting.xmltags.SqlNode</OriginalElement>
   <nodes>
-    <node x="0.0" y="168.0">org.apache.ibatis.scripting.xmltags.WhereSqlNode</node>
     <node x="996.5" y="89.0">org.apache.ibatis.scripting.xmltags.StaticTextSqlNode</node>
+    <node x="0.0" y="168.0">org.apache.ibatis.scripting.xmltags.WhereSqlNode</node>
     <node x="228.5" y="89.0">org.apache.ibatis.scripting.xmltags.MixedSqlNode</node>
     <node x="721.5" y="89.0">org.apache.ibatis.scripting.xmltags.TextSqlNode</node>
     <node x="551.5" y="89.0">org.apache.ibatis.scripting.xmltags.ForEachSqlNode</node>
@@ -34,17 +34,17 @@
       <point x="612.2142857142857" y="69.0" />
       <point x="-14.285714285714334" y="14.5" />
     </edge>
-    <edge source="org.apache.ibatis.scripting.xmltags.SetSqlNode" target="org.apache.ibatis.scripting.xmltags.TrimSqlNode">
-      <point x="0.0" y="-14.5" />
-      <point x="220.0" y="143.0" />
-      <point x="176.75" y="143.0" />
-      <point x="31.75" y="14.5" />
-    </edge>
     <edge source="org.apache.ibatis.scripting.xmltags.IfSqlNode" target="org.apache.ibatis.scripting.xmltags.SqlNode">
       <point x="0.0" y="-14.5" />
       <point x="922.5" y="59.0" />
       <point x="655.0714285714286" y="59.0" />
       <point x="28.571428571428555" y="14.5" />
+    </edge>
+    <edge source="org.apache.ibatis.scripting.xmltags.SetSqlNode" target="org.apache.ibatis.scripting.xmltags.TrimSqlNode">
+      <point x="0.0" y="-14.5" />
+      <point x="220.0" y="143.0" />
+      <point x="176.75" y="143.0" />
+      <point x="31.75" y="14.5" />
     </edge>
     <edge source="org.apache.ibatis.scripting.xmltags.MixedSqlNode" target="org.apache.ibatis.scripting.xmltags.SqlNode">
       <point x="0.0" y="-14.5" />
@@ -69,7 +69,7 @@
       <point x="0.0" y="14.5" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="539.5" y="-125.5" />
+  <settings layout="Hierarchic Group" zoom="1.0" x="614.5" y="101.0" />
   <SelectedNodes>
     <node>org.apache.ibatis.scripting.xmltags.MixedSqlNode</node>
   </SelectedNodes>

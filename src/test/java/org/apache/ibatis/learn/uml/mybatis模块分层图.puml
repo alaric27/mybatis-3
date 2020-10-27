@@ -1,0 +1,50 @@
+@startuml
+digraph G {
+    compound = true
+    bgcolor = "mintcream";
+    rankdir = TB;
+    fontsize = 12;
+    node[fontname = "Microsoft YaHei", fontsize = 12, shape = "Mrecord", color = "skyblue", style = "filled"];
+    edge[fontname = "Microsoft YaHei", fontsize = 12];
+
+    subgraph cluster_interface {
+
+        label = "接口层"
+        session[label = "session"];
+    }
+
+    subgraph cluster_core{
+        label = "核心处理层";
+
+        config[label = "配置解析"];
+        param_mapping[label = "参数映射"];
+        sql_parse[label = "sql解析"];
+        sql_exe[label = "sql执行"];
+        result_mapping[label = "结果集映射"];
+        plugin[label = "插件"];
+        {rank = same config param_mapping sql_parse}
+        {rank = same sql_exe result_mapping plugin}
+        param_mapping -> result_mapping [style=invisible, arrowhead = none]
+
+    }
+
+    subgraph cluster_base {
+        label = "基础支撑层";
+        io[label = "资源加载模块"];
+        datasource[label = "数据源模块"];
+        reflection[label = "反射模块"];
+        parsing[label = "解析器模块"];
+        type[label = "类型转换"];
+        logging[label = "日志模块"];
+        binding[label = "bind模块"];
+        cache[label = "缓存模块"];
+        transaction[label = "事务模块"];
+        {rank = same transaction cache binding type logging}
+        {rank = same parsing reflection datasource io}
+        binding -> reflection [style=invisible, arrowhead = none]
+    }
+
+    session -> param_mapping [lhead = cluster_core, ltail = cluster_interface, style=invisible, arrowhead = none]
+    sql_exe -> binding[style=invisible, arrowhead = none]
+}
+@enduml

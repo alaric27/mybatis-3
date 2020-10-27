@@ -17,6 +17,12 @@
       <point x="319.75" y="59.0" />
       <point x="-13.75" y="14.5" />
     </edge>
+    <edge source="org.apache.ibatis.scripting.xmltags.DynamicSqlSource" target="org.apache.ibatis.mapping.SqlSource">
+      <point x="0.0" y="-14.5" />
+      <point x="81.0" y="49.0" />
+      <point x="292.25" y="49.0" />
+      <point x="-41.25" y="14.5" />
+    </edge>
     <edge source="org.apache.ibatis.builder.StaticSqlSource" target="org.apache.ibatis.mapping.SqlSource">
       <point x="0.0" y="-14.5" />
       <point x="590.5" y="49.0" />
@@ -29,15 +35,11 @@
       <point x="347.25" y="59.0" />
       <point x="13.75" y="14.5" />
     </edge>
-    <edge source="org.apache.ibatis.scripting.xmltags.DynamicSqlSource" target="org.apache.ibatis.mapping.SqlSource">
-      <point x="0.0" y="-14.5" />
-      <point x="81.0" y="49.0" />
-      <point x="292.25" y="49.0" />
-      <point x="-41.25" y="14.5" />
-    </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="331.5" y="54.0" />
-  <SelectedNodes />
+  <settings layout="Hierarchic Group" zoom="1.0" x="364.5" y="56.5" />
+  <SelectedNodes>
+    <node>org.apache.ibatis.mapping.SqlSource</node>
+  </SelectedNodes>
   <Categories />
   <SCOPE>All</SCOPE>
   <VISIBILITY>private</VISIBILITY>
