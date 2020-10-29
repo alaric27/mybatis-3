@@ -2,34 +2,39 @@
 digraph G {
     compound = true
     bgcolor = "mintcream";
-    rankdir = TB;
     fontsize = 12;
-    node[fontname = "Microsoft YaHei", fontsize = 12, shape = "Mrecord", color = "skyblue", style = "filled"];
+    node[fontname = "Microsoft YaHei", fontsize = 12, shape = "Mrecord", color = "skyblue", style = "filled", fixedsize = true, width = 1.1];
     edge[fontname = "Microsoft YaHei", fontsize = 12];
 
     subgraph cluster_interface {
-
-        label = "接口层"
-        session[label = "session"];
+        graph[rank = same];
+        label = "接口层";
+        session[label = "session", fixedsize = true, width = 6.5];
     }
 
     subgraph cluster_core{
-        label = "核心处理层";
+      label = "核心处理层";
+      edge [style=invis];
 
-        config[label = "配置解析"];
-        param_mapping[label = "参数映射"];
-        sql_parse[label = "sql解析"];
-        sql_exe[label = "sql执行"];
-        result_mapping[label = "结果集映射"];
-        plugin[label = "插件"];
-        {rank = same config param_mapping sql_parse}
-        {rank = same sql_exe result_mapping plugin}
-        param_mapping -> result_mapping [style=invisible, arrowhead = none]
+      config[label = "配置解析", row = config];
+      param_mapping[label = "参数映射", row = config];
+      sql_parse[label = "sql解析", row = config];
 
+      sql_exe[label = "sql执行", row = sql_exe];
+      result_mapping[label = "结果集映射", row = sql_exe];
+      plugin[label = "插件", row = sql_exe];
+      dummy1[style = invis, fixedsize = true, width = 6.5, height = 0]
+
+      config -> sql_exe;
+      param_mapping -> result_mapping;
+      sql_parse -> plugin;
+      result_mapping -> dummy1;
     }
 
     subgraph cluster_base {
         label = "基础支撑层";
+        edge [style=invis];
+
         io[label = "资源加载模块"];
         datasource[label = "数据源模块"];
         reflection[label = "反射模块"];
@@ -39,12 +44,14 @@ digraph G {
         binding[label = "bind模块"];
         cache[label = "缓存模块"];
         transaction[label = "事务模块"];
-        {rank = same transaction cache binding type logging}
-        {rank = same parsing reflection datasource io}
-        binding -> reflection [style=invisible, arrowhead = none]
+
+        datasource -> reflection;
+        parsing -> type;
+        logging -> binding;
+        cache -> transaction;
     }
 
     session -> param_mapping [lhead = cluster_core, ltail = cluster_interface, style=invisible, arrowhead = none]
-    sql_exe -> binding[style=invisible, arrowhead = none]
+    dummy1 -> parsing [lhead = cluster_core, ltail = cluster_interface, style=invisible, arrowhead = none]
 }
 @enduml
