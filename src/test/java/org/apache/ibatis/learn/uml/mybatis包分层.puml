@@ -1,0 +1,47 @@
+@startuml
+digraph G {
+    compound = true
+    bgcolor = "white";
+    fontsize = 12;
+    node[fontname = "Microsoft YaHei", fontsize = 12, shape = "Mrecord", color = "skyblue", style = "filled", fixedsize = true, width = 1.4];
+    edge[fontname = "Microsoft YaHei", fontsize = 12, style=invis];
+
+    subgraph cluster_interface {
+
+        label = "核心操作包";
+        session;
+        cache;
+        jdbc;
+        executor;
+        cursor;
+        transaction;
+        plugin;
+
+        {rank = same session cache jdbc}
+        {rank = same executor cursor transaction plugin}
+        session -> cache -> jdbc
+        executor -> cursor -> transaction -> plugin
+        session -> executor
+
+    }
+
+    subgraph cluster_core{
+        label = "配置解析包"
+        builder -> mapping -> binding -> scripting -> datasource;
+    }
+
+    subgraph cluster_base {
+        label = "基础功能包"
+        {rank = same exceptions io lang logging}
+        {rank = same reflection type annotations parsing}
+        exceptions -> io -> lang -> logging
+        reflection -> type -> annotations -> parsing
+        exceptions -> reflection;
+
+        dummy1[height = 0.5, style = invis]
+        reflection -> dummy1
+    }
+    executor -> exceptions
+}
+
+@enduml
