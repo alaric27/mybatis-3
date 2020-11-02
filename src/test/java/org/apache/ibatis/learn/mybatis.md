@@ -97,12 +97,10 @@
 
 # mybatis 核心功能
 
-	* 将包含标签的复杂数据库操作语句解析为纯粹的SQL语句
-	* 将数据操作节点和映射接口中的抽象方法进行绑定，在抽象方法被调用时执行数据库操作
-	* 将输入参数对象转化为数据库操作语句中的参数
-	* 将数据库操作语句的返回结果转化为对象
-
-
+* 将包含标签的复杂数据库操作语句解析为纯粹的SQL语句
+* 将数据操作节点和映射接口中的抽象方法进行绑定，在抽象方法被调用时执行数据库操作
+* 将输入参数对象转化为数据库操作语句中的参数
+* 将数据库操作语句的返回结果转化为对象
 
 # mybatis操作流程
 
@@ -176,5 +174,163 @@
   * session
   * plugin
 
+# exceptions包
+
+​	exceptions中主要是异常相关的类
+
+![image-20201030133035310](/Users/zyn/Library/Application Support/typora-user-images/image-20201030133035310.png)
+
+​	从上图可以看到很多异常并没有在exceptions包中，这就涉及项目规划时分包问题。通常情况下在规划一个项目的包结构时，可以按照以下两种方式进行分包。
+
+ * 按照类型方式分包
+
+   例如将所有的接口放入一个包，将所有的Controller类放入一个包。这种方式从类型上看更为你清晰，但是会将完成同一功能的不同类分散到不同包中，不便于模块化开发。
+
+* 按照功能方式划分
+
+  例如将所有与加/解密有关的类放入一个包，将所有与http请求有关的类放入一个包。这种方式，同一个功能的类内聚性高，便于模块化开发，但会导致同一个包内类的类型混乱。
+
+在项目设计和开发中，推荐优先将功能耦合度高的类放入按照按照功能划分的包中，而将功能耦合度低或供多个功能使用的类放入按照类型划分的包中。
+
+# reflection包
+
+## Type接口及其子类
+
+![image-20201101110847466](/Users/zyn/Library/Application Support/typora-user-images/image-20201101110847466.png)
 
 
+
+* Class类
+
+  它代表运行的java程序中的类和接口，枚举类型、注解也都是Class类的子类
+
+* WildcardType接口
+
+  它代表通配符表达式
+
+* TypeVariable接口
+
+  它是类型变量的父接口。例如Map<K, V>中的K，V就是类型变量
+
+* ParameterizedType接口
+
+  它代表参数化的类型。例如Collection<String>
+
+* GenericArrayType接口
+
+  它代表包含ParameterizedType或TypeVariable元素的列表
+
+## 对象工厂子包
+
+​	reflection包下的factory子包是用来基于反射生产出各种对象
+
+![image-20201101112325900](/Users/zyn/Library/Application Support/typora-user-images/image-20201101112325900.png)
+
+## 执行器子包
+
+​	reflection包下的invoker子包能够基于反射实现对象方法的调用和对象属性的读写，invoker是对JDK功能的简单封装
+
+![image-20201101113131825](/Users/zyn/Library/Application Support/typora-user-images/image-20201101113131825.png)
+
+## 属性子包
+
+​	reflection包下的property子包，用来完成与对象属性相关的操作
+
+​	PropertyCopier：通反射的方式复制对象属性
+
+​	PropertyNamer：通过get、set方法名称找出对应的属性
+
+​	PropertyTokenizer：可以处理多层嵌套表达式
+
+## 对象包装器子包
+
+![image-20201102083455501](/Users/zyn/Library/Application Support/typora-user-images/image-20201102083455501.png)
+
+​	wrapper包装了bean、map、collection的对象信息、类型信息，并提供了更多易用的方法
+
+## 反射核心类
+
+![image-20201102092205092](/Users/zyn/Library/Application Support/typora-user-images/image-20201102092205092.png)
+
+​	Reflector类将一个类反射解析后,会将该类的属性、方法等一一归类到以上的各个属性中。
+
+```java
+  /**
+   * 对应的 Class 类型
+   */
+  private final Class<?> type;
+
+  /**
+   * 可读属性的名称集合，可读属性就是存在相应 getter 方法的属性，初始值为空数纽
+   */
+  private final String[] readablePropertyNames;
+
+  /**
+   * 可写属性的名称集合，可写属性就是存在相应 setter 方法的属性，初始值为空数纽
+   */
+  private final String[] writablePropertyNames;
+
+  /**
+   * 记录了属性相应 的 setter 方法 ， key 是属性名称， value是 Invoker 对象，
+   * 它是对 setter 方法对应Method 对象的封装
+   */
+  private final Map<String, Invoker> setMethods = new HashMap<>();
+
+  /**
+   * 属性相应 的 getter 方法集合 ， key 是属 性名称， value 也是 Invoker 对象
+   */
+  private final Map<String, Invoker> getMethods = new HashMap<>();
+
+  /**
+   * 记录了属性相应的 setter 方法 的参数值类型， key 是属性名称， value 是 setter 方法的参数类型
+   */
+  private final Map<String, Class<?>> setTypes = new HashMap<>();
+
+  /**
+   * 记录 了属性相应的 getter 方法的返回位类型， key是属性名称， value 是 getter 方法的返回位类型
+   */
+  private final Map<String, Class<?>> getTypes = new HashMap<>();
+
+  /**
+   *  记录了默认构造方法
+   */
+  private Constructor<?> defaultConstructor;
+
+  /**
+   * 记录了所有属性名称的集合
+   */
+  private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
+
+```
+
+
+
+## 参数名解析器
+
+​	ParamNameResolver用来按顺序列出方法中的虚参，并在获取命名参数是对应响应的实参
+
+## 泛型解析器
+
+​	TypeParameterResolver 主要有三个功能：
+
+ * 解析字段类型
+
+   ```java
+   Type resolveFieldType(Field field, Type srcType)
+   ```
+
+ * 解析返回值类型
+
+   ```java
+   Type resolveReturnType(Method method, Type srcType)
+   ```
+
+ * 解析方法参数列表中各个参数的类型
+
+   ```java
+   Type[] resolveParamTypes(Method method, Type srcType)
+   ```
+
+# annotations与lang包
+
+​	

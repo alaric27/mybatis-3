@@ -1,0 +1,16 @@
+@startuml
+
+class Class
+
+interface Type
+interface GenericArrayType
+interface ParameterizedType
+interface TypeVariable
+interface WildcardType
+
+Type <|.. Class
+Type <|-- GenericArrayType
+Type <|-- ParameterizedType
+Type <|-- TypeVariable
+Type <|-- WildcardType
+@enduml

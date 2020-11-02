@@ -1,0 +1,14 @@
+@startuml
+
+
+RuntimeException <|-- IbatisException
+RuntimeException <|-- RuntimeSqlException
+IbatisException <|-- PersistenceException
+PersistenceException <|-- TooManyResultsException
+PersistenceException <|-- ExecutorException
+ExecutorException <|-- BatchExecutorException
+PersistenceException <|-- TypeException
+PersistenceException <|-- TransactionException
+PersistenceException <|-- 其他异常
+
+@enduml

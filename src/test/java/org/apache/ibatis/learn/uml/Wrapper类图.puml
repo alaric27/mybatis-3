@@ -1,0 +1,22 @@
+@startuml
+
+interface ObjectWrapper
+abstract class BaseWrapper
+class CollectionWrapper
+class BeanWrapper
+class MapWrapper
+
+interface ObjectWrapperFactory
+class DefaultObjectWrapperFactory
+
+
+ObjectWrapper <|.. BaseWrapper
+ObjectWrapper <|.. CollectionWrapper
+BaseWrapper <|-- BeanWrapper
+BaseWrapper <|-- MapWrapper
+
+ObjectWrapperFactory <|-- DefaultObjectWrapperFactory
+DefaultObjectWrapperFactory ..> ObjectWrapper
+
+
+@enduml

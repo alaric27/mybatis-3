@@ -1,0 +1,10 @@
+@startuml
+interface ReflectorFactory
+class DefaultReflectorFactory
+class Reflector
+
+ReflectorFactory <|.. DefaultReflectorFactory
+DefaultReflectorFactory .> Reflector
+
+
+@enduml

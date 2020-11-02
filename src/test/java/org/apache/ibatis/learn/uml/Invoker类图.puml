@@ -1,0 +1,16 @@
+@startuml
+
+interface Invoker {
+    Object invoke(Object target, Object[] args);
+    Class<?> getType();
+}
+
+class GetFieldInvoker
+class MethodInvoker
+class SetFieldInvoker
+
+Invoker <|-- GetFieldInvoker
+Invoker <|-- SetFieldInvoker
+Invoker <|-- MethodInvoker
+
+@enduml

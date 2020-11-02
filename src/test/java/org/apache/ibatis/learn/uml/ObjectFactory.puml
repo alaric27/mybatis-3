@@ -1,0 +1,18 @@
+@startuml
+
+interface ObjectFactory {
+    <T> T create(Class<T> type);
+    <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
+    <T> boolean isCollection(Class<T> type);
+}
+
+class DefaultObjectFactory {
+    <T> T create(Class<T> type);
+    <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
+    <T> boolean isCollection(Class<T> type);
+}
+
+
+ObjectFactory <|.. DefaultObjectFactory
+
+@enduml
