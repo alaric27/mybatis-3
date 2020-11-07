@@ -1,0 +1,14 @@
+@startuml
+
+interface SqlNode
+SqlNode <|.. ChooseSqlNode
+SqlNode <|.. ForEachSqlNode
+SqlNode <|.. IfSqlNode
+SqlNode <|.. MixedSqlNode
+SqlNode <|.. SetSqlNode
+SqlNode <|.. StaticTextSqlNode
+SqlNode <|.. TextSqlNode
+SqlNode <|.. TrimSqlNode
+SqlNode <|.. VarDeclSqlNode
+SqlNode <|.. WhereSqlNode
+@enduml

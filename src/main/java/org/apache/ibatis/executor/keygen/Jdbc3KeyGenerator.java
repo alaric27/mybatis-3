@@ -65,16 +65,20 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
   }
 
   public void processBatch(MappedStatement ms, Statement stmt, Object parameter) {
+    // 拿到主键的属性名
     final String[] keyProperties = ms.getKeyProperties();
+    // 没有设置主键则无需操作
     if (keyProperties == null || keyProperties.length == 0) {
       return;
     }
+    // 调用stmt.getGeneratedKeys()方法获取自动生成的主键值
     try (ResultSet rs = stmt.getGeneratedKeys()) {
       final ResultSetMetaData rsmd = rs.getMetaData();
       final Configuration configuration = ms.getConfiguration();
       if (rsmd.getColumnCount() < keyProperties.length) {
         // Error?
       } else {
+          // 将主键赋值给实体对象
         assignKeys(configuration, rs, rsmd, keyProperties, parameter);
       }
     } catch (Exception e) {

@@ -1,0 +1,22 @@
+@startuml
+
+abstract class BaseBuilder
+class XMLConfigBuilder
+class XMLScriptBuilder
+class XMLMapperBuilder
+class MapperBuilderAssistant
+class XMLStatementBuilder
+class ParameterMappingTokenHandler
+class SqlSourceBuilder
+
+XMLConfigBuilder -|> BaseBuilder
+BaseBuilder <|-- XMLScriptBuilder
+BaseBuilder <|-- XMLMapperBuilder
+BaseBuilder <|-- XMLStatementBuilder
+BaseBuilder <|-- ParameterMappingTokenHandler
+BaseBuilder <|-- MapperBuilderAssistant
+BaseBuilder <|- SqlSourceBuilder
+SqlSourceBuilder +--> ParameterMappingTokenHandler
+XMLMapperBuilder --> MapperBuilderAssistant
+XMLStatementBuilder --> MapperBuilderAssistant
+@enduml

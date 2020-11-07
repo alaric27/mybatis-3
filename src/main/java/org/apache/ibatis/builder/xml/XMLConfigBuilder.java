@@ -47,14 +47,14 @@ import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 
 /**
- *  主键负责解析mybatis-config.xml配置文件
+ *  主要负责解析mybatis-config.xml配置文件
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
 public class XMLConfigBuilder extends BaseBuilder {
 
   /**
-   * 标识是否已经解析过 mybat工s-config.xml 配置丈件
+   * 标识是否已经解析过 mybatis-config.xml 配置丈件
    */
   private boolean parsed;
 

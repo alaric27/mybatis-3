@@ -1,0 +1,17 @@
+@startuml
+
+interface InvocationHandler
+class MapperProxyFactory
+class MapperProxy
+class MapperMethod
+class ParamMap
+class SqlCommand
+class MethodSignature
+
+InvocationHandler <|.. MapperProxy
+MapperProxyFactory .> MapperProxy
+MapperProxy ..> MapperMethod
+MapperMethod +-- ParamMap
+MapperMethod +-- SqlCommand
+MapperMethod +-- MethodSignature
+@enduml

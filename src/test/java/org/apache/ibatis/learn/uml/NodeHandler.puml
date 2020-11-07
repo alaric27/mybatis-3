@@ -1,0 +1,21 @@
+@startuml
+interface NodeHandler
+class BindHandler
+class TrimHandler
+class WhereHandler
+class SetHandler
+class ForEachHandler
+class IfHandler
+class OtherwiseHandler
+class ChooseHandler
+
+BindHandler .|> NodeHandler
+NodeHandler <|.. TrimHandler
+NodeHandler <|.. WhereHandler
+NodeHandler <|... SetHandler
+NodeHandler <|... ForEachHandler
+NodeHandler <|.. IfHandler
+NodeHandler <|.. OtherwiseHandler
+NodeHandler <|. ChooseHandler
+
+@enduml

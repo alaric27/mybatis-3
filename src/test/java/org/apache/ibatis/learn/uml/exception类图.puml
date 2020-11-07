@@ -1,6 +1,4 @@
 @startuml
-
-
 RuntimeException <|-- IbatisException
 RuntimeException <|-- RuntimeSqlException
 IbatisException <|-- PersistenceException

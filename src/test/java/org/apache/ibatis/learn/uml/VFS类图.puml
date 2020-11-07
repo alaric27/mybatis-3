@@ -1,0 +1,11 @@
+@startuml
+
+abstract class VFS
+
+class DefaultVFS
+class JBoss6VFS
+
+VFS <|-- DefaultVFS
+VFS <|-- JBoss6VFS
+
+@enduml

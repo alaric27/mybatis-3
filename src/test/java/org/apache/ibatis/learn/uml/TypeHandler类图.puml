@@ -1,0 +1,16 @@
+@startuml
+
+interface TypeHandler
+abstract class BaseTypeHandler
+abstract class TypeReference
+
+TypeHandler <|.. BaseTypeHandler
+TypeReference <|-- BaseTypeHandler
+
+BaseTypeHandler <|-- StringTypeHandler
+BaseTypeHandler <|-- BooleanTypeHandler
+BaseTypeHandler <|-- CharacterTypeHandler
+BaseTypeHandler <|-- 其他TypeHandler
+
+
+@enduml

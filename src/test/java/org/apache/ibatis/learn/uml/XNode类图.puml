@@ -1,0 +1,18 @@
+@startuml
+
+class XNode
+class XPathParser
+XNode --> XPathParser
+
+
+interface TokenHandler
+class PropertyParser
+class GenericTokenParser
+class VariableTokenHandler
+
+PropertyParser ..> GenericTokenParser
+GenericTokenParser -> TokenHandler
+TokenHandler <|.. VariableTokenHandler
+PropertyParser +-- VariableTokenHandler
+
+@enduml

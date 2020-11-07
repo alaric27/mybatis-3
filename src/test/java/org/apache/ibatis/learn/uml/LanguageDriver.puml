@@ -1,0 +1,12 @@
+@startuml
+interface LanguageDriver
+class XMLLanguageDriver
+class RawLanguageDriver
+class VelocityLanguageDriver
+class LanguageDriverRegistry
+
+LanguageDriver <|.. XMLLanguageDriver
+LanguageDriver <|.. RawLanguageDriver
+LanguageDriver <|.. VelocityLanguageDriver
+LanguageDriverRegistry .> LanguageDriver
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+interface SqlSource
+class ProviderSqlSource
+class DynamicSqlSource
+class RawSqlSource
+class StaticSqlSource
+
+SqlSource <|.. ProviderSqlSource
+SqlSource <|.. DynamicSqlSource
+SqlSource <|.. RawSqlSource
+SqlSource <|.. StaticSqlSource
+@enduml
